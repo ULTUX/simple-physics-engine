@@ -1,5 +1,7 @@
 function setup(){
     createCanvas(1200, 600);
+    var kulka = document.getElementById("kulka");
+ 
 }
 let circles = [];
 function draw(){
@@ -10,11 +12,12 @@ function draw(){
         circle(circles[i].x, circles[i].y, circles[i].d);
         circles[i].draw();
     }
+    kulka.innerHTML=circles.length;
 }
 
 function mouseClicked(){
-    // circles.push(new Circle(random(0, width), random(0, height/3), random(20, 70)));
-    circles.push(new Circle(mouseX, mouseY, 60));
+    circles.push(new Circle(random(0, width), random(0, height/3), random(20, 70)));
+    // circles.push(new Circle(mouseX, mouseY, 60));
 }
 
 class Circle {
@@ -30,24 +33,27 @@ class Circle {
         this.lastUp = null;
         this.lastDown = null;
         this.lastMaxHeight = null;
+        this.wind =  round(random(-5, 5));
     }
 
     draw() {
         if (this.isMovement){
+            this.x += this.wind;
         if (this.strona == 1){
             this.velocity += this.accel;
             this.y += this.velocity;
             this.lastUp = this.velocity;
-            console.log("1:               "+this.velocity);
         }
         if (this.y >= height){
             this.strona *= -1;
         }
+        if (this.x >= width && this.wind > 0) { this.wind *= -1;
+            mouseClicked();}
+        else if (this.x <= 0 && this.wind < 0) {this.wind *= -1; mouseClicked();}
         if (this.strona == -1) {
-            this.velocity -= 0.98*this.accel;
+            this.velocity -= 0.981*this.accel;
             this.y -= this.velocity;
             this.lastDown = this.velocity;
-            console.log("2:               "+this.velocity)
             if (this.velocity <= 0){ 
                 this.strona *= -1;
                 this.lastMaxHeight = this.y;
